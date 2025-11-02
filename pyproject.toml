@@ -1,0 +1,15 @@
+[project]
+name = "faster-gepa"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "datasets>=4.3.0",
+    "dspy",
+    "ipykernel>=7.1.0",
+    "ipywidgets>=8.1.7",
+]
+
+[tool.uv.sources]
+dspy = { git = "https://github.com/stanfordnlp/dspy.git", rev = "main" }
