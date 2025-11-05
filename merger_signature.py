@@ -11,57 +11,89 @@ from typing import Any
 
 
 class ProposalMergerSignature(dspy.Signature):
-    """You are an expert at synthesizing multiple high-quality ideas into a single superior solution. Your task is to merge the best proposals into one optimized instruction that surpasses any individual proposal.
+    """You are an expert at synthesizing multiple high-quality ideas into a single SUPERIOR solution. Your task is CRITICAL: create a merged instruction that DEMONSTRABLY SURPASSES any individual proposal by creating genuine synergies.
+
+**CRITICAL REQUIREMENT:**
+The merged instruction MUST be demonstrably superior to any individual proposal. It should:
+- Address MORE failure patterns than any single proposal
+- Combine complementary strengths in ways that create new value
+- Be more comprehensive, specific, and actionable than any single proposal
+- NOT just concatenate or average the proposals—CREATE SYNTHESIS
 
 **Your Role:**
-Analyze multiple top-scoring instruction proposals and create a merged instruction that combines their strengths while addressing all observed failure patterns.
+Analyze multiple top-scoring instruction proposals and create a merged instruction that intelligently combines their strengths while addressing ALL observed failure patterns.
 
-**Merging Process - Follow These Steps:**
+**Merging Process - Follow These Steps STRICTLY:**
 
-1. **Analyze Each Proposal:**
-   - Identify the unique strengths of each proposal
-   - Note which specific failures each addresses
-   - Recognize innovative strategies or domain knowledge each contains
-   - Understand the judge's reasoning for their scores
+1. **Deep Analysis of Each Proposal:**
+   - Identify the UNIQUE, DISTINCTIVE strengths of each proposal (what makes it special?)
+   - Map which SPECIFIC failures each addresses (be precise)
+   - Recognize innovative strategies, domain knowledge, or novel approaches each contains
+   - Understand the judge's reasoning—why did each score well?
+   - Identify what each proposal uniquely contributes that others don't
 
-2. **Find Synergies:**
-   - Identify complementary ideas that can be combined
-   - Look for proposals that address different aspects of the problem
-   - Find reinforcing strategies that work well together
+2. **Find GENUINE Synergies (Not Just Combinations):**
+   - Look for proposals that address DIFFERENT aspects or failure modes—these can be powerfully combined
+   - Identify complementary ideas that REINFORCE each other (e.g., one provides structure, another provides domain details)
+   - Find proposals that take DIFFERENT approaches to the same problem—combining these creates more robust solutions
+   - Create NEW insights by combining perspectives that individual proposals couldn't achieve alone
+   - **CRITICAL**: If proposals are too similar, you must synthesize them into something MORE comprehensive than either
 
-3. **Resolve Conflicts:**
+3. **Resolve Conflicts Intelligently:**
    - When proposals contradict, choose the approach that:
-     * Better addresses the failure patterns
+     * Better addresses the failure patterns (check the dataset)
      * Is more specific and actionable
      * Has clearer reasoning from the judge
-   - Don't just pick the highest-scoring proposal—consider all perspectives
+     * Can be combined with elements from other proposals
+   - Consider if the conflict reveals a deeper issue—address both perspectives if possible
+   - Don't default to the highest-scoring proposal—synthesize the best elements
 
-4. **Eliminate Redundancy:**
-   - Combine similar suggestions into single, stronger statements
-   - Avoid repetitive guidance
-   - Keep the instruction concise while comprehensive
+4. **Eliminate Redundancy and Create Density:**
+   - Combine similar suggestions into SINGLE, STRONGER, MORE COMPREHENSIVE statements
+   - Avoid repetitive guidance—each sentence should add unique value
+   - Keep the instruction concise BUT ensure it's MORE complete than any individual proposal
+   - If multiple proposals say similar things, synthesize them into a better version
 
-5. **Synthesize:**
-   - Create a coherent, well-structured instruction
-   - Ensure logical flow and clarity
+5. **Synthesize to Create Superiority:**
+   - Create a coherent, well-structured instruction with logical flow
+   - Ensure it addresses ALL failure patterns comprehensively (more than any single proposal)
    - Maintain specific, actionable guidance throughout
-   - Verify all key failure patterns are addressed
+   - Verify the merged instruction would perform better than any individual proposal
+   - The final instruction should feel like a unified, expert-crafted solution, not a patchwork
 
-**Quality Criteria for Merged Result:**
-- ✓ Incorporates the best insights from all proposals
-- ✓ More comprehensive than any single proposal
-- ✓ Addresses all failure patterns from the dataset
-- ✓ Clear, specific, and immediately actionable
-- ✓ Well-structured with logical organization
-- ✓ No contradictions or redundancy
+**Quality Criteria for Merged Result (MUST MEET ALL):**
+- ✓ Incorporates the BEST insights from ALL proposals (not just some)
+- ✓ MORE comprehensive than ANY single proposal (addresses more failure patterns)
+- ✓ Addresses ALL failure patterns from the dataset (check completeness)
+- ✓ Clear, specific, and immediately actionable (better than any individual)
+- ✓ Well-structured with logical organization (professional quality)
+- ✓ No contradictions or redundancy (seamless synthesis)
+- ✓ Creates NEW value through synergies (not just combination)
+- ✓ Would score HIGHER than any individual proposal if judged
 
 **Output Requirements:**
-- **merged_instruction**: The final synthesized instruction (ready to use)
-- **rationale**: Explain your merging decisions—what you took from each proposal, how you resolved conflicts, and what synergies you discovered
-- **improvements_over_current**: Concrete examples of how the merged instruction fixes the specific failures observed in the dataset
+- **merged_instruction**: The final synthesized instruction that is demonstrably superior to any individual proposal
+- **rationale**: Detailed explanation including:
+  1. What unique elements were taken from each proposal and WHY
+  2. How conflicts were resolved and why those choices were made
+  3. What NEW insights or synergies emerged from combining proposals
+  4. SPECIFIC reasons why this merged instruction is BETTER than any single proposal
+  5. How the merged instruction addresses MORE failure patterns than any individual
+- **improvements_over_current**: Concrete examples showing:
+  1. How the merged instruction fixes SPECIFIC failures from the dataset
+  2. What improvements it makes over the current instruction
+  3. Why it's better than any individual proposal
 
-**Important:**
-The merged instruction should be genuinely better than any individual proposal. Don't just concatenate them—synthesize new value by combining their strengths intelligently.
+**Success Criteria:**
+Your merged instruction succeeds if it:
+- Addresses more failure patterns than any single proposal
+- Combines complementary strengths in ways that create new value
+- Is more comprehensive and actionable than any individual proposal
+- Would score higher than any individual proposal if evaluated
+- Feels like a unified, expert solution rather than a combination
+
+**Remember:**
+The goal is SYNTHESIS, not concatenation. The merged instruction should be GENUINELY SUPERIOR to any individual proposal. If you can't create something better, you haven't done your job properly.
 """
 
     # Inputs
@@ -89,17 +121,20 @@ The merged instruction should be genuinely better than any individual proposal. 
     merged_instruction: str = dspy.OutputField(
         desc=(
             "The final merged instruction that combines the best elements of all proposals. "
-            "Should be clear, specific, actionable, and address the failures in the dataset."
+            "MUST be demonstrably superior to any individual proposal: more comprehensive, "
+            "addresses more failure patterns, creates synergies, and is more actionable. "
+            "Should be clear, specific, and immediately usable."
         )
     )
 
     rationale: str = dspy.OutputField(
         desc=(
             "Detailed explanation of the merging process, including:\n"
-            "1. What elements were taken from each proposal and why\n"
-            "2. How conflicts or contradictions were resolved\n"
-            "3. What new insights emerged from combining the proposals\n"
-            "4. Why this merged instruction is better than any single proposal"
+            "1. What UNIQUE elements were taken from each proposal and WHY\n"
+            "2. How conflicts or contradictions were resolved and why those choices were made\n"
+            "3. What NEW insights or synergies emerged from combining proposals\n"
+            "4. SPECIFIC reasons why this merged instruction is BETTER than any single proposal\n"
+            "5. How the merged instruction addresses MORE failure patterns than any individual"
         )
     )
 
