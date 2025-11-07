@@ -289,6 +289,11 @@ class MultiLLMProposalFn:
             Dictionary mapping component names to new proposed instructions
         """
         proposed_texts = {}
+        
+        self.last_proposals = {}
+        self.last_judgments = {}
+        self.last_top_proposals = {}
+        self.last_merged = {}
 
         for component_name in components_to_update:
             if self.verbose:
@@ -306,19 +311,38 @@ class MultiLLMProposalFn:
             proposals = self.generate_proposals_parallel(
                 current_instruction, component_examples
             )
+            
+            # Store proposals with model info for logging
+            self.last_proposals[component_name] = [
+                {
+                    'proposal': prop,
+                    'model': str(self.proposal_lms[idx].model) if idx < len(self.proposal_lms) else 'unknown',
+                    'index': idx
+                }
+                for idx, prop in enumerate(proposals)
+            ]
 
             # Step 2: Score all proposals with LLM-as-judge
             scored_proposals = self.score_proposals(
                 current_instruction, proposals, component_dataset
             )
+            
+            # Store judgments for logging
+            self.last_judgments[component_name] = scored_proposals
 
             # Step 3: Select top-n proposals
             top_proposals = self.select_top_proposals(scored_proposals)
+            
+            # Store top proposals for logging
+            self.last_top_proposals[component_name] = top_proposals
 
             # Step 4: Merge top proposals
             merged_instruction = self.merge_proposals(
                 current_instruction, top_proposals, component_dataset
             )
+            
+            # Store merged instruction for logging
+            self.last_merged[component_name] = merged_instruction
 
             proposed_texts[component_name] = merged_instruction
 
